@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jerome M Abanda</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
     <style>
         :root {
             --bg: #0a0a0a;
@@ -13,8 +12,8 @@
             --border: #252525;
             --text: #ffffff;
             --text-secondary: #aaaaaa;
-            --accent: #6e45e2;
-            --accent-light: #9c64ff;
+            --accent: #404040;
+            --accent-light: #929292;
         }
         
         * {
@@ -29,72 +28,98 @@
             color: var(--text);
             line-height: 1.6;
             scroll-behavior: smooth;
-            overflow-x: hidden;
         }
         
-        /* Navigation */
-        nav {
+        /* Sidebar Navigation - Visible by default on desktop */
+        .sidebar {
             position: fixed;
             top: 0;
-            width: 100%;
-            background-color: rgba(10,10,10,0.9);
-            backdrop-filter: blur(10px);
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background-color: var(--card);
             z-index: 1000;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid var(--border);
-            transform: translateY(-100%);
-            animation: slideDown 0.8s 0.2s forwards;
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            transition: transform 0.3s ease;
         }
         
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .sidebar-container {
+            padding: 2rem;
+            height: 100%;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
+            flex-direction: column;
         }
         
         .logo {
-            font-size: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
             font-weight: 600;
-            background: linear-gradient(90deg, var(--accent), var(--accent-light));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        }
+        
+        .close-sidebar {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            display: none; /* Hidden by default on desktop */
+        }
+        
+        .close-sidebar:hover {
+            color: var(--accent-light);
         }
         
         .nav-links {
             display: flex;
-            gap: 2rem;
+            flex-direction: column;
+            gap: 1rem;
+            flex-grow: 1;
         }
         
         .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             color: var(--text-secondary);
             text-decoration: none;
-            font-weight: 500;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
             transition: all 0.3s ease;
-            position: relative;
-            font-size: 0.95rem;
         }
         
         .nav-links a:hover {
+            background-color: rgba(110, 69, 226, 0.1);
             color: var(--text);
         }
         
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-light));
-            transition: width 0.3s ease;
+        .nav-links a i {
+            width: 20px;
+            text-align: center;
         }
         
-        .nav-links a:hover::after {
-            width: 100%;
+        /* Mobile menu toggle - hidden by default */
+        .mobile-menu-toggle {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            z-index: 999;
+            cursor: pointer;
+            display: none;
+        }
+        
+        /* Main content area */
+        .main-content {
+            margin-left: 250px; /* Match sidebar width */
+            transition: margin-left 0.3s ease;
         }
         
         .container {
@@ -698,12 +723,34 @@
             transition: all 1s ease;
         }
         
-        .reveal.active {
+           .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
         
         /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .close-sidebar {
+                display: block;
+            }
+        }
+        
         @media (max-width: 768px) {
             section {
                 padding: 4rem 0;
@@ -712,10 +759,6 @@
             h2 {
                 font-size: 2rem;
                 margin-bottom: 2rem;
-            }
-            
-            .nav-links {
-                gap: 1rem;
             }
             
             .about-content {
@@ -727,7 +770,7 @@
                 order: -1;
             }
             
-               .projects-grid {
+            .projects-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -758,15 +801,38 @@
                 left: 23px;
             }
         }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+            
+            .hero-name {
+                font-size: 2.5rem;
+            }
+            
+            .hero-tagline {
+                font-size: 1.1rem;
+            }
+            
+            .project-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .contact-form {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Mobile Menu Toggle -->
+    <!-- Mobile Menu Toggle - Hidden on desktop, shown on mobile -->
     <button class="mobile-menu-toggle" aria-label="Toggle menu">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar Navigation - Always visible on desktop -->
     <nav class="sidebar">
         <div class="sidebar-container">
             <div class="logo">
@@ -843,47 +909,12 @@
             <div class="container">
                 <h2>Featured Projects</h2>
                 <div class="projects-grid">
+               
                     <div class="project-card">
-                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Code Editor App" class="project-img">
+                        <img src="https://i.postimg.cc/wvNwSGXH/Screenshot-2025-07-04-19-54-05-475-com-teejay-trebedit-edit.jpg" alt="E-commerce" class="project-img">
                         <div class="project-info">
-                            <h3 class="project-title">CodeCollab</h3>
-                            <p class="project-desc">Real-time collaborative code editor with syntax highlighting and video chat functionality.</p>
-                            <div class="project-links">
-                                <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
-                                <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="project-card">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Data Dashboard" class="project-img">
-                        <div class="project-info">
-                            <h3 class="project-title">DataViz Dashboard</h3>
-                            <p class="project-desc">Interactive data visualization dashboard with custom charts and real-time updates.</p>
-                            <div class="project-links">
-                                <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
-                                <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="project-card">
-                        <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Task Manager" class="project-img">
-                        <div class="project-info">
-                            <h3 class="project-title">TaskFlow</h3>
-                            <p class="project-desc">Productivity app with kanban boards, time tracking, and team collaboration features.</p>
-                            <div class="project-links">
-                                <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
-                                <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="project-card">
-                        <img src="https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="E-commerce" class="project-img">
-                        <div class="project-info">
-                            <h3 class="project-title">ShopSphere</h3>
-                            <p class="project-desc">E-commerce platform with product customization, payment processing, and admin dashboard.</p>
+                            <h3 class="project-title">Personal Website</h3>
+                            <p class="project-desc">kinda portfolio but built for fun</p>
                             <div class="project-links">
                                 <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
                                 <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live</a>
@@ -891,6 +922,7 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
         </section>
         
@@ -1045,7 +1077,130 @@
             <p class="footer-text">Jerome © 2023</p>
         </div>
     </footer>
-    
-    <script src="script.js"></script>
+     <script>
+        // DOM Elements
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const closeSidebarBtn = document.querySelector('.close-sidebar');
+        const sidebar = document.querySelector('.sidebar');
+
+        // Function to open sidebar
+        function openSidebar() {
+            sidebar.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Function to close sidebar
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Event Listeners for sidebar
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openSidebar();
+            });
+        }
+
+        if (closeSidebarBtn) {
+            closeSidebarBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeSidebar();
+            });
+        }
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', (e) => {
+            const isClickInsideSidebar = sidebar.contains(e.target);
+            const isClickOnToggle = mobileMenuToggle.contains(e.target);
+            
+            if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('active')) {
+                closeSidebar();
+            }
+        });
+
+        // Close sidebar when clicking on a link (mobile)
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 992) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        // Prevent clicks inside sidebar from closing it
+        sidebar.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Animate skill bars when they come into view
+        const skillBars = document.querySelectorAll('.skill-progress');
+
+        function animateSkillBars() {
+            skillBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        }
+
+        // Scroll reveal animation
+        function scrollReveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveals[i].getBoundingClientRect().top;
+                const revealPoint = 150;
+                
+                if (revealTop < windowHeight - revealPoint) {
+                    reveals[i].classList.add('active');
+                } else {
+                    reveals[i].classList.remove('active');
+                }
+            }
+        }
+
+        // Check if skills section is in view and animate
+        function checkSkillsInView() {
+            const skillsSection = document.getElementById('skills');
+            const sectionTop = skillsSection.getBoundingClientRect().top;
+            const sectionHeight = skillsSection.offsetHeight;
+            const windowHeight = window.innerHeight;
+            
+            if (sectionTop < windowHeight - sectionHeight/3) {
+                animateSkillBars();
+                window.removeEventListener('scroll', checkSkillsInView);
+            }
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Event listeners
+        window.addEventListener('scroll', scrollReveal);
+        window.addEventListener('scroll', checkSkillsInView);
+        window.addEventListener('load', scrollReveal);
+
+        // Initialize animations
+        setTimeout(() => {
+            document.querySelectorAll('.reveal').forEach(el => {
+                el.classList.add('active');
+            });
+        }, 500);
+    </script>
 </body>
 </html>
+      
